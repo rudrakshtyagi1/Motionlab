@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Landing from '@/pages/Landing'
-import Analysis from '@/pages/Analysis'
-import HistoryPage from '@/pages/HistoryPage'
-import ProfilePage from '@/pages/ProfilePage'
+import Landing from './pages/Landing'
+import Analysis from './pages/Analysis'
+import HistoryPage from './pages/History'
+import ProfilePage from './pages/ProfilePage'
 
 /**
  * App — root router.
