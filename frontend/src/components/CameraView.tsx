@@ -291,21 +291,21 @@ export default function CameraView({
             {poseStatus === 'LOADING' && (
               <div className="flex items-center gap-1.5 glass px-3 py-1.5 rounded-full">
                 <IconLoader className="w-3 h-3 text-warn animate-spin" />
-                <span className="text-xs font-mono text-warn">Loading pose model…</span>
+                <span className="text-xs font-mono text-warn">Initializing pose detection...</span>
               </div>
             )}
             {poseStatus === 'READY' && (
               <div className="flex items-center gap-1.5 glass px-3 py-1.5 rounded-full">
-                <span className={`status-dot ${personDetected ? 'bg-good animate-pulse-slow' : 'bg-muted'}`} />
-                <span className={`text-xs font-mono ${personDetected ? 'text-good' : 'text-muted'}`}>
-                  {personDetected ? 'Person detected' : 'No person detected'}
+                <span className={`status-dot ${personDetected ? 'bg-good animate-pulse-slow' : 'bg-warn'}`} />
+                <span className={`text-xs font-mono ${personDetected ? 'text-good font-bold' : 'text-warn'}`}>
+                  {personDetected ? 'Ready for analysis' : 'Move into the camera frame'}
                 </span>
               </div>
             )}
             {poseStatus === 'ERROR' && (
               <div className="flex items-center gap-1.5 glass px-3 py-1.5 rounded-full">
                 <span className="status-dot bg-danger" />
-                <span className="text-xs font-mono text-danger">Pose detection failed</span>
+                <span className="text-xs font-mono text-danger">Pose model failure</span>
               </div>
             )}
           </div>
