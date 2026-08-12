@@ -30,11 +30,11 @@ export default function PhaseIndicator({ phase }: PhaseIndicatorProps) {
   const style = getPhaseBadgeStyle(phase)
 
   return (
-    <div className="glass rounded-xl p-3 flex items-center justify-between border border-surface-400/30">
-      <span className="text-[10px] font-mono uppercase text-slate-300 tracking-wider">
+    <div className="glass rounded-xl p-2.5 flex flex-col justify-between border border-surface-400/30 font-mono min-h-[64px]">
+      <span className="text-[9px] uppercase text-slate-300 tracking-wider">
         Current Phase
       </span>
-      <span className={`px-3 py-1 rounded-full text-xs font-mono border font-semibold tracking-wide ${style.bg} ${style.text} ${style.border}`}>
+      <span className={`px-2 py-1 mt-1 rounded-lg text-xs font-bold text-center border tracking-wider uppercase transition-all ${style.bg} ${style.text} ${style.border}`}>
         {phase}
       </span>
     </div>

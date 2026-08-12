@@ -21,37 +21,37 @@ export default function SessionStats() {
   const consistency = selectFormConsistencyPercent(reps)
 
   return (
-    <div className="glass rounded-xl p-3.5 space-y-2.5 border border-surface-400/30">
+    <div className="glass rounded-xl p-2.5 space-y-1.5 border border-surface-400/30 font-mono">
       <div className="flex items-center justify-between">
-        <span className="text-[10px] font-mono uppercase text-accent tracking-wider font-semibold">
+        <span className="text-[9px] uppercase text-accent tracking-wider font-semibold">
           Session Quick Stats
         </span>
-        <span className="text-[10px] font-mono text-muted">Real-Time</span>
+        <span className="text-[8.5px] text-muted">Real-Time</span>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 font-mono text-xs">
+      <div className="grid grid-cols-2 gap-1.5 text-xs">
         {/* Total Reps */}
-        <div className="glass-accent rounded-lg p-2 flex flex-col">
-          <span className="text-[9px] uppercase text-muted tracking-wider">Total Reps</span>
-          <span className="text-base font-bold text-slate-100">{String(repCount).padStart(2, '0')}</span>
+        <div className="glass-accent rounded-lg p-1.5 px-2 flex flex-col justify-between">
+          <span className="text-[8.5px] uppercase text-muted tracking-wider">Total Reps</span>
+          <span className="text-sm font-bold text-slate-100 mt-0.5">{String(repCount).padStart(2, '0')}</span>
         </div>
 
         {/* Avg Rep Time */}
-        <div className="glass-accent rounded-lg p-2 flex flex-col">
-          <span className="text-[9px] uppercase text-muted tracking-wider">Avg Duration</span>
-          <span className="text-base font-bold text-slate-100">{avgDuration !== null ? `${avgDuration}s` : '—'}</span>
+        <div className="glass-accent rounded-lg p-1.5 px-2 flex flex-col justify-between">
+          <span className="text-[8.5px] uppercase text-muted tracking-wider">Avg Duration</span>
+          <span className="text-sm font-bold text-slate-100 mt-0.5">{avgDuration !== null ? `${avgDuration}s` : '—'}</span>
         </div>
 
         {/* Good Reps */}
-        <div className="glass-accent rounded-lg p-2 flex flex-col">
-          <span className="text-[9px] uppercase text-muted tracking-wider">Good Reps</span>
-          <span className="text-base font-bold text-good">{String(goodReps).padStart(2, '0')}</span>
+        <div className="glass-accent rounded-lg p-1.5 px-2 flex flex-col justify-between">
+          <span className="text-[8.5px] uppercase text-muted tracking-wider">Good Reps</span>
+          <span className="text-sm font-bold text-good mt-0.5">{String(goodReps).padStart(2, '0')}</span>
         </div>
 
         {/* Form Consistency */}
-        <div className="glass-accent rounded-lg p-2 flex flex-col">
-          <span className="text-[9px] uppercase text-muted tracking-wider">Consistency</span>
-          <span className="text-base font-bold text-accent">{consistency !== null ? `${consistency}%` : '—'}</span>
+        <div className="glass-accent rounded-lg p-1.5 px-2 flex flex-col justify-between">
+          <span className="text-[8.5px] uppercase text-muted tracking-wider">Consistency</span>
+          <span className="text-sm font-bold text-accent mt-0.5">{consistency !== null ? `${consistency}%` : '—'}</span>
         </div>
       </div>
     </div>

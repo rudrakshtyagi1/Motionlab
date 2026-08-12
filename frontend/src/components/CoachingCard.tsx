@@ -25,12 +25,12 @@ export default function CoachingCard({ feedback }: CoachingCardProps) {
     : 'bg-accent/15 border-accent/40 text-accent'
 
   return (
-    <div className="glass rounded-xl p-3.5 space-y-2 border border-surface-400/30">
-      <span className="text-[10px] font-mono uppercase text-slate-300 tracking-wider">
+    <div className="glass rounded-xl p-2.5 space-y-1.5 border border-surface-400/30 font-mono">
+      <span className="text-[9px] uppercase text-slate-300 tracking-wider block font-semibold">
         Live Coaching
       </span>
 
-      <div className={`rounded-lg px-4 py-3 border font-mono text-xs font-bold tracking-wide uppercase transition-all duration-300 ${style}`}>
+      <div className={`rounded-lg px-3 py-2 border text-xs font-bold tracking-wide uppercase transition-all duration-300 truncate ${style}`}>
         {message}
       </div>
     </div>

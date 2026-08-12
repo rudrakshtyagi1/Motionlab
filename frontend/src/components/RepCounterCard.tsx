@@ -24,26 +24,21 @@ export default function RepCounterCard({ repCount }: RepCounterCardProps) {
   }, [repCount])
 
   return (
-    <div className="relative glass-accent rounded-xl p-4 flex items-center justify-between overflow-hidden shadow-lg border border-accent/20">
-      <div>
-        <span className="text-[10px] font-mono uppercase text-muted tracking-wider block">
-          Completed Reps
-        </span>
+    <div className="relative glass-accent rounded-xl p-2.5 flex flex-col justify-between overflow-hidden shadow-lg border border-accent/20 font-mono min-h-[64px]">
+      <span className="text-[9px] uppercase text-muted tracking-wider">
+        Completed Reps
+      </span>
+
+      <div className="flex items-baseline justify-between mt-1">
         <span
-          className={`text-5xl font-mono font-extrabold text-slate-100 tracking-tight transition-transform duration-300 inline-block ${
+          className={`text-3xl font-extrabold text-slate-100 tracking-tight transition-transform duration-300 inline-block ${
             animate ? 'scale-110 text-good' : 'scale-100'
           }`}
         >
           {formattedCount}
         </span>
-      </div>
-
-      <div className="flex flex-col items-end gap-1">
-        <span className="glass px-2.5 py-1 rounded-full text-[10px] font-mono text-accent uppercase tracking-widest border border-accent/30">
-          SQUAT ANALYSIS
-        </span>
-        <span className="text-[10px] font-mono text-muted/60">
-          Real-Time Counter
+        <span className="text-[9px] text-accent uppercase font-bold tracking-wider glass px-1.5 py-0.5 rounded border border-accent/30">
+          SQUATS
         </span>
       </div>
     </div>

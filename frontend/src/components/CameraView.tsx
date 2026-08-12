@@ -257,8 +257,8 @@ export default function CameraView({
 
   return (
     <div
-      className="relative w-full rounded-2xl overflow-hidden bg-surface-100 border border-surface-400/30 flex items-center justify-center"
-      style={{ minHeight: '420px', minWidth: '100%' }}
+      className="relative w-full flex-1 min-h-[320px] rounded-2xl overflow-hidden bg-surface-100 border border-surface-400/30 flex items-center justify-center"
+      style={{ minWidth: '100%' }}
     >
       <video
         ref={videoRef}
@@ -269,7 +269,7 @@ export default function CameraView({
         className={`w-full h-full object-cover rounded-2xl transition-opacity duration-300 ${
           state.status === 'ACTIVE' ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
-        style={{ transform: 'scaleX(-1)', minHeight: '420px' }}
+        style={{ transform: 'scaleX(-1)' }}
       />
 
       {state.status === 'ACTIVE' && landmarksRef && (
