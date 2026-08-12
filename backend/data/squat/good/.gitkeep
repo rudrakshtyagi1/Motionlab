@@ -1,0 +1,4 @@
+# Data directory — placeholder for opt-in landmark data collection.
+# Landmark sequences (JSONL) saved here when user enables data collection.
+# This directory is excluded from .gitignore for actual recordings.
+# See sessionRecorder.ts and Step 18 of the implementation plan.
