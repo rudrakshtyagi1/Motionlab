@@ -7,7 +7,7 @@
 
 import { create } from 'zustand'
 import type { SessionState, RepRecord, TimelineEvent, SessionSummary } from '@/types/session'
-import { calculateSessionSummary } from '@/services/sessionAnalytics'
+import { calculateSessionSummary, calculateSessionConsistency } from '@/services/sessionAnalytics'
 import { useProfileStore } from '@/store/profileStore'
 
 // ─── Initial State ────────────────────────────────────────────────────────────
@@ -55,6 +55,10 @@ export const useSessionStore = create<SessionStore>((set, get) => ({
       status:          'RUNNING',
       startTime:       Date.now(),
       repCount:        0,
+      validCount:      0,
+      partialCount:    0,
+      shallowCount:    0,
+      totalAttempts:   0,
       incompleteCount: 0,
       reps:            [],
       timeline:        [],
@@ -85,6 +89,10 @@ export const useSessionStore = create<SessionStore>((set, get) => ({
   addRepRecord: (record) =>
     set(s => ({
       repCount: record.isCompleted ? s.repCount + 1 : s.repCount,
+      validCount: record.isCompleted ? s.validCount + 1 : s.validCount,
+      partialCount: record.depthClassification === 'PARTIAL' ? s.partialCount + 1 : s.partialCount,
+      shallowCount: record.depthClassification === 'SHALLOW' ? s.shallowCount + 1 : s.shallowCount,
+      totalAttempts: s.totalAttempts + 1,
       incompleteCount: !record.isCompleted ? s.incompleteCount + 1 : s.incompleteCount,
       reps: [...s.reps, record],
     })),
@@ -92,6 +100,10 @@ export const useSessionStore = create<SessionStore>((set, get) => ({
   incrementRep: (record) =>
     set(s => ({
       repCount: record.isCompleted ? s.repCount + 1 : s.repCount,
+      validCount: record.isCompleted ? s.validCount + 1 : s.validCount,
+      partialCount: record.depthClassification === 'PARTIAL' ? s.partialCount + 1 : s.partialCount,
+      shallowCount: record.depthClassification === 'SHALLOW' ? s.shallowCount + 1 : s.shallowCount,
+      totalAttempts: s.totalAttempts + 1,
       incompleteCount: !record.isCompleted ? s.incompleteCount + 1 : s.incompleteCount,
       reps: [...s.reps, record],
     })),
@@ -125,12 +137,9 @@ export function selectAvgRepDurationSec(reps: RepRecord[]): number | null {
 }
 
 /**
- * Calculate Form Consistency percentage = (goodReps / completedReps) * 100.
- * Formula requirement: returns null if fewer than 3 completed reps exist (displays '—').
+ * Calculate Form Consistency percentage using Coefficient of Variation across depth, tempo, and form quality.
+ * Returns null if fewer than 2 valid completed reps exist (displays '—').
  */
 export function selectFormConsistencyPercent(reps: RepRecord[]): number | null {
-  const completed = reps.filter(r => r.isCompleted !== false)
-  if (completed.length < 3) return null
-  const goodReps = selectGoodRepsCount(reps)
-  return Math.round((goodReps / completed.length) * 100)
+  return calculateSessionConsistency(reps)
 }

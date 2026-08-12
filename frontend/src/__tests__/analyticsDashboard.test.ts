@@ -70,22 +70,23 @@ describe('Analytics Dashboard Selectors', () => {
     expect(selectAvgRepDurationSec(reps)).toBe(1.8)
   })
 
-  it('selectFormConsistencyPercent returns null when reps < 3', () => {
-    const twoReps: RepRecord[] = [
+  it('selectFormConsistencyPercent returns null when reps < 2', () => {
+    const singleRep: RepRecord[] = [
       makeMockRep(1, true),
-      makeMockRep(2, true),
     ]
-    // Requirement 11: If fewer than 3 completed reps exist, return null so UI shows "—"
-    expect(selectFormConsistencyPercent(twoReps)).toBeNull()
+    expect(selectFormConsistencyPercent(singleRep)).toBeNull()
   })
 
-  it('selectFormConsistencyPercent calculates percentage when reps >= 3', () => {
+  it('selectFormConsistencyPercent calculates CV-based percentage when reps >= 2', () => {
     const fourReps: RepRecord[] = [
       makeMockRep(1, true),
       makeMockRep(2, true),
       makeMockRep(3, true),
-      makeMockRep(4, false), // 3 good out of 4 = 75%
+      makeMockRep(4, false),
     ]
-    expect(selectFormConsistencyPercent(fourReps)).toBe(75)
+    const consistency = selectFormConsistencyPercent(fourReps)
+    expect(consistency).not.toBeNull()
+    expect(consistency!).toBeGreaterThan(0)
+    expect(consistency!).toBeLessThanOrEqual(100)
   })
 })

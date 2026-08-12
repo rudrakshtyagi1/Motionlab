@@ -6,7 +6,7 @@
  *  - Zero fake AI scores
  *  - Zero hardcoded statistics
  *  - Pure, deterministic calculation logic suitable for unit testing
- *  - Form consistency = (goodReps / validCompletedReps) * 100 (null if < 3 completed reps)
+ *  - Movement consistency calculated via Coefficient of Variation (CV) across depth, tempo, and form quality (null if < 2 completed reps)
  *  - Calorie burn calculation using standard MET formula via estimateCalories()
  *  - Breakdown for validReps, partialReps, shallowReps, and totalAttempts
  */
@@ -33,6 +33,100 @@ export function getRepFormStatus(rep: RepRecord): FormStatus {
     return rep.formAnalysis.isGoodRep ? 'GOOD' : 'WARNING'
   }
   return 'GOOD'
+}
+
+/** Helper arithmetic mean */
+function calculateMean(values: number[]): number {
+  if (values.length === 0) return 0
+  return values.reduce((sum, v) => sum + v, 0) / values.length
+}
+
+/** Helper population standard deviation */
+function calculateStdDev(values: number[], mean: number): number {
+  if (values.length <= 1) return 0
+  const variance = values.reduce((acc, v) => acc + Math.pow(v - mean, 2), 0) / values.length
+  return Math.sqrt(variance)
+}
+
+/** Helper Coefficient of Variation consistency score: clamp(100 * (1 - CV), 0, 100) */
+function calculateCVConsistency(values: number[]): number | null {
+  if (values.length < 2) return null
+  const mean = calculateMean(values)
+  if (mean <= 0 || !isFinite(mean) || isNaN(mean)) return null
+  const std = calculateStdDev(values, mean)
+  const cv = std / Math.abs(mean)
+  if (!isFinite(cv) || isNaN(cv)) return null
+  const score = Math.max(0, Math.min(100, 100 * (1 - cv)))
+  return isNaN(score) ? null : score
+}
+
+/**
+ * calculateSessionConsistency — CV-based consistency evaluation across depth, tempo, & form score.
+ *
+ * Weights:
+ *   - Depth consistency: 50%
+ *   - Tempo (duration) consistency: 20%
+ *   - Form quality score consistency: 30%
+ *
+ * Returns null if fewer than 2 valid completed reps exist.
+ */
+export function calculateSessionConsistency(reps: RepRecord[]): number | null {
+  const completedReps = reps.filter(r => r.isCompleted !== false)
+  const validRepCount = completedReps.length
+
+  if (validRepCount < 2) {
+    return null
+  }
+
+  // 1. Depth consistency (minimum knee angle in degrees)
+  const depthValues = completedReps.map(r => r.bottomKneeAngle)
+  const depthConsistency = calculateCVConsistency(depthValues)
+
+  // 2. Tempo consistency (rep duration in seconds)
+  const durationValues = completedReps.map(r => r.durationMs / 1000)
+  const tempoConsistency = calculateCVConsistency(durationValues)
+
+  // 3. Form quality consistency (rep form score 0-100)
+  const formScoreValues = completedReps.map(r => r.formAnalysis?.score ?? 80)
+  const formConsistency = calculateCVConsistency(formScoreValues)
+
+  // Weighted Combination: Depth 50%, Tempo 20%, Form 30%
+  let weightedSum = 0
+  let totalWeight = 0
+
+  if (depthConsistency !== null && !isNaN(depthConsistency)) {
+    weightedSum += depthConsistency * 0.50
+    totalWeight += 0.50
+  }
+  if (tempoConsistency !== null && !isNaN(tempoConsistency)) {
+    weightedSum += tempoConsistency * 0.20
+    totalWeight += 0.20
+  }
+  if (formConsistency !== null && !isNaN(formConsistency)) {
+    weightedSum += formConsistency * 0.30
+    totalWeight += 0.30
+  }
+
+  if (totalWeight <= 0) {
+    return null
+  }
+
+  const rawFinal = weightedSum / totalWeight
+  const finalConsistency = Math.round(Math.max(0, Math.min(100, rawFinal)))
+
+  if (isNaN(finalConsistency) || !isFinite(finalConsistency)) {
+    return null
+  }
+
+  console.log('[Consistency Calc]', {
+    validRepCount,
+    depthConsistency: depthConsistency !== null ? Math.round(depthConsistency) : null,
+    tempoConsistency: tempoConsistency !== null ? Math.round(tempoConsistency) : null,
+    formConsistency: formConsistency !== null ? Math.round(formConsistency) : null,
+    finalConsistency,
+  })
+
+  return finalConsistency
 }
 
 /**
@@ -83,10 +177,8 @@ export function calculateSessionSummary(
     else if (status === 'POOR') poorReps++
   }
 
-  // 4. Form Consistency Percentage (null if < 3 completed reps)
-  const formConsistency = validReps >= 3
-    ? Math.round((goodReps / validReps) * 100)
-    : null
+  // 4. Movement Consistency Score (CV-based across depth, tempo, and form quality)
+  const formConsistency = calculateSessionConsistency(reps)
 
   // 5. Form Breakdown Aggregation across completed reps
   const formBreakdown = aggregateFormBreakdown(completedRepsList)

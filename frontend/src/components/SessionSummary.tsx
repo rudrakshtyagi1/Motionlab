@@ -190,7 +190,7 @@ export default function SessionSummary({ summary, onRestart }: SessionSummaryPro
                 <span className="text-2xl font-extrabold text-slate-100">
                   {summary.formConsistency !== null ? `${summary.formConsistency}%` : '—'}
                 </span>
-                <span className="text-[9px] text-muted">{summary.validReps >= 3 ? 'good quality' : '<3 reps'}</span>
+                <span className="text-[9px] text-muted">{summary.validReps >= 2 ? 'movement similarity' : '< 2 reps'}</span>
               </div>
             </div>
 
