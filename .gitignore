@@ -1,0 +1,50 @@
+# ─── Node / Frontend ───────────────────────────────────────────────────────────
+node_modules/
+dist/
+.vite/
+*.local
+
+# ─── Python / Backend ──────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+*.egg
+
+# ─── Environment ───────────────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ─── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── Editors ───────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ─── Data (collected landmark sequences — opt-in only) ─────────────────────────
+backend/data/squat/good/*.jsonl
+backend/data/squat/bad/*.jsonl
+
+# ─── SQLite databases ──────────────────────────────────────────────────────────
+*.db
+*.sqlite3
+
+# ─── Logs ──────────────────────────────────────────────────────────────────────
+*.log
+logs/
